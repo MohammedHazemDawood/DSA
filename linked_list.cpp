@@ -1,0 +1,128 @@
+#include <cassert>
+#include <iostream>
+using namespace std;
+
+template <class type>
+class LinkedList
+{
+private:
+    struct node
+    {
+        type value;
+        node *next;
+    };
+    node *head; //[0]
+public:
+    LinkedList()
+    {
+        head = nullptr;
+    }
+    void add(type item)
+    {
+        node *tmp = new node;
+        tmp->value = item;
+        tmp->next = head;
+
+        head = tmp;
+    }
+    void add(int index, type item)
+    {
+        int sz = size();
+        if (index > sz)
+            return;
+        if (index == 0)
+        {
+            add(item);
+            return;
+        }
+
+        node *it = head;
+        for (int i = 0; i < index - 1; i++)
+        {
+            it = it->next;
+        }
+        node *tmp = new node;
+        tmp->value = item;
+        tmp->next = it->next;
+        it->next = tmp;
+    }
+    type get(int index)
+    {
+        if (index > size() - 1)
+            return nullptr;
+        node *it = head;
+        for (int i = 0; i < index; i++)
+        {
+            it = it->next;
+        }
+        return it->value;
+    }
+    type remove(int index)
+    {
+        if (index > size() - 1)
+            return nullptr;
+
+        if (index == 0)
+        {
+            node *tmp = head;
+            head = tmp->next;
+            type value = tmp->value;
+            delete tmp;
+            return value;
+        }
+
+        node *it = head;
+        for (int i = 0; i < index - 1; i++)
+        {
+            it = it->next;
+        }
+        node *wanted = it->next;
+        it->next = wanted->next;
+
+        type val = wanted->value;
+
+        delete wanted;
+
+        return val;
+    }
+    int size()
+    {
+        node *it = head;
+        int sz = 0;
+        while (it != nullptr)
+        {
+            sz++;
+            it = it->next;
+        }
+        return sz;
+    }
+    ~LinkedList()
+    {
+        while (size() > 0)
+        {
+            remove(i);
+        }
+    }
+};
+
+int main()
+{
+    LinkedList<int> list;
+    list.add(10);
+    list.add(20);
+    list.add(30);
+
+    assert(list.size() == 3);
+    assert(list.get(0) == 30);
+    assert(list.get(1) == 20);
+    assert(list.get(2) == 10);
+
+    list.add(1, 15);
+    assert(list.get(1) == 15);
+
+    assert(list.remove(1) == 15);
+    assert(list.remove(0) == 30);
+    assert(list.size() == 2);
+
+    return 0;
+}
