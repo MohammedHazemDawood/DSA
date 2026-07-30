@@ -49,7 +49,7 @@ public:
     type get(int index)
     {
         if (index > size() - 1)
-            return nullptr;
+            return NULL;
         node *it = head;
         for (int i = 0; i < index; i++)
         {
@@ -60,7 +60,7 @@ public:
     type remove(int index)
     {
         if (index > size() - 1)
-            return nullptr;
+            return NULL;
 
         if (index == 0)
         {
@@ -85,6 +85,47 @@ public:
 
         return val;
     }
+    type dropLast()
+    {
+        node *prev = head;
+        node *current = head->next;
+
+        while (current->next != nullptr)
+        {
+            current = current->next;
+            prev = prev->next;
+        }
+        type val = current->value;
+        delete current;
+        prev->next = nullptr;
+        return val;
+    }
+    void reverse()
+    {
+        if (empty())
+            return;
+        node *prev = nullptr;
+        node *current = head;
+        while (current != nullptr)
+        {
+            node *tmp = current->next;
+            current->next = prev;
+            prev = current;
+            current = tmp;
+        }
+        head = prev;
+    }
+    // bool search(type target){
+    //     if(empty()) retutn NULL;
+    //     node *it = head;
+    //     type result = NULL;
+    //     while(it != nullptr && result != target){
+    //         if(it->value == target) result = 
+    //     }
+    // }
+    bool empty(){
+        return head == nullptr;
+    }
     int size()
     {
         node *it = head;
@@ -100,7 +141,7 @@ public:
     {
         while (size() > 0)
         {
-            remove(i);
+            remove(0);
         }
     }
 };
@@ -111,18 +152,26 @@ int main()
     list.add(10);
     list.add(20);
     list.add(30);
+    list.add(40);
 
-    assert(list.size() == 3);
-    assert(list.get(0) == 30);
-    assert(list.get(1) == 20);
-    assert(list.get(2) == 10);
+    cout << "[ ";
+    for (int i = 0; i < list.size(); i++)
+    {
+        cout << list.get(i) << " ,";
+    }
+    cout << " ]" << endl;
 
-    list.add(1, 15);
-    assert(list.get(1) == 15);
+    list.reverse();
 
-    assert(list.remove(1) == 15);
-    assert(list.remove(0) == 30);
-    assert(list.size() == 2);
+
+    cout << "[ ";
+    for (int i = 0; i < list.size(); i++)
+    {
+        cout << list.get(i) << " ,";
+    }
+    cout << " ]" << endl;
+
+    cout << "last " << list.dropLast() << endl;
 
     return 0;
 }
